@@ -13,6 +13,8 @@ interface Chat {
   time: string;
   unread: number;
   online: boolean;
+  isGroup?: boolean;
+  members?: number;
 }
 
 interface ChatSidebarProps {
@@ -21,6 +23,7 @@ interface ChatSidebarProps {
   searchQuery: string;
   onSearchChange: (value: string) => void;
   onChatSelect: (id: number) => void;
+  onNewChatClick: () => void;
 }
 
 const ChatSidebar = ({
@@ -29,13 +32,14 @@ const ChatSidebar = ({
   searchQuery,
   onSearchChange,
   onChatSelect,
+  onNewChatClick,
 }: ChatSidebarProps) => {
   return (
     <div className="w-80 bg-card border-r border-border flex flex-col">
       <div className="p-4 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold">Чаты</h2>
-          <Button size="icon" variant="ghost">
+          <Button size="icon" variant="ghost" onClick={onNewChatClick}>
             <Icon name="PenSquare" size={20} />
           </Button>
         </div>
@@ -77,7 +81,15 @@ const ChatSidebar = ({
 
               <div className="flex-1 text-left overflow-hidden">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="font-medium truncate">{chat.name}</span>
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <span className="font-medium truncate">{chat.name}</span>
+                    {chat.isGroup && (
+                      <Badge variant="outline" className="text-xs px-1.5 py-0">
+                        <Icon name="Users" size={12} className="mr-1" />
+                        {chat.members}
+                      </Badge>
+                    )}
+                  </div>
                   <span className="text-xs text-muted-foreground">{chat.time}</span>
                 </div>
                 <p className="text-sm text-muted-foreground truncate">

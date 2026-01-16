@@ -19,6 +19,8 @@ interface Chat {
   time: string;
   unread: number;
   online: boolean;
+  isGroup?: boolean;
+  members?: number;
 }
 
 interface ChatWindowProps {
@@ -109,7 +111,12 @@ const ChatWindow = ({
                 placeholder="Введите сообщение..."
                 value={messageInput}
                 onChange={(e) => onMessageInputChange(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && onSendMessage()}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    onSendMessage();
+                  }
+                }}
                 className="flex-1 bg-input border-border"
               />
               <Button variant="ghost" size="icon">

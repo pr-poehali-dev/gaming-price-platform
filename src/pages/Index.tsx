@@ -6,6 +6,7 @@ import ChatSidebar from "@/components/ChatSidebar";
 import ChatWindow from "@/components/ChatWindow";
 import ProfileView from "@/components/ProfileView";
 import SettingsView from "@/components/SettingsView";
+import NewChatDialog from "@/components/NewChatDialog";
 
 interface Message {
   id: number;
@@ -22,6 +23,8 @@ interface Chat {
   time: string;
   unread: number;
   online: boolean;
+  isGroup?: boolean;
+  members?: number;
 }
 
 const Index = () => {
@@ -29,8 +32,9 @@ const Index = () => {
   const [selectedChat, setSelectedChat] = useState<number | null>(1);
   const [messageInput, setMessageInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [showNewChatDialog, setShowNewChatDialog] = useState(false);
 
-  const chats: Chat[] = [
+  const [chats, setChats] = useState<Chat[]>([
     {
       id: 1,
       name: "Анна Смирнова",
@@ -67,7 +71,18 @@ const Index = () => {
       unread: 0,
       online: true,
     },
-  ];
+    {
+      id: 5,
+      name: "Проект Alpha",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Group1",
+      lastMessage: "Алексей: Отлично, начинаем!",
+      time: "10:00",
+      unread: 3,
+      online: true,
+      isGroup: true,
+      members: 8,
+    },
+  ]);
 
   const [messages, setMessages] = useState<Message[]>([
     { id: 1, text: "Привет! Как проект продвигается?", sent: false, time: "14:25" },
@@ -89,9 +104,29 @@ const Index = () => {
     }
   };
 
+  const handleCreateChat = (name: string, isGroup: boolean) => {
+    const newChat: Chat = {
+      id: chats.length + 1,
+      name,
+      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`,
+      lastMessage: "Начните общение...",
+      time: "Сейчас",
+      unread: 0,
+      online: true,
+      isGroup,
+      members: isGroup ? 1 : undefined,
+    };
+    setChats([newChat, ...chats]);
+    setSelectedChat(newChat.id);
+  };
+
   const filteredChats = chats.filter((chat) =>
     chat.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleThemeToggle = () => {
+    document.documentElement.classList.toggle('dark');
+  };
 
   const selectedChatData = chats.find((chat) => chat.id === selectedChat);
 
@@ -138,7 +173,7 @@ const Index = () => {
         </Button>
 
         <div className="mt-auto">
-          <Button variant="ghost" size="icon" className="w-12 h-12">
+          <Button variant="ghost" size="icon" className="w-12 h-12" onClick={handleThemeToggle}>
             <Icon name="Moon" size={22} />
           </Button>
         </div>
@@ -152,6 +187,7 @@ const Index = () => {
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
             onChatSelect={setSelectedChat}
+            onNewChatClick={() => setShowNewChatDialog(true)}
           />
           <ChatWindow
             selectedChatData={selectedChatData}
@@ -162,6 +198,12 @@ const Index = () => {
           />
         </>
       )}
+
+      <NewChatDialog
+        open={showNewChatDialog}
+        onOpenChange={setShowNewChatDialog}
+        onCreateChat={handleCreateChat}
+      />
 
       {activeView === "profile" && <ProfileView />}
 

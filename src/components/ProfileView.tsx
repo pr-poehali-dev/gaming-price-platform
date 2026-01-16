@@ -1,8 +1,47 @@
 import Icon from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useToast } from "@/hooks/use-toast";
 
 const ProfileView = () => {
+  const { toast } = useToast();
+
+  const handleEdit = () => {
+    toast({
+      title: "Редактирование профиля",
+      description: "Функция редактирования профиля в разработке",
+    });
+  };
+
+  const handlePrivacy = () => {
+    toast({
+      title: "Настройки приватности",
+      description: "Открыты настройки конфиденциальности",
+    });
+  };
+
+  const handleNotifications = () => {
+    toast({
+      title: "Уведомления",
+      description: "Настройки уведомлений",
+    });
+  };
+
+  const handleTheme = () => {
+    document.documentElement.classList.toggle('dark');
+    toast({
+      title: "Тема изменена",
+      description: "Тема приложения успешно изменена",
+    });
+  };
+
+  const handleLogout = () => {
+    toast({
+      title: "Выход из аккаунта",
+      description: "Вы вышли из системы",
+      variant: "destructive",
+    });
+  };
   return (
     <div className="flex-1 bg-gradient-to-br from-background via-background to-primary/5 overflow-y-auto">
       <div className="max-w-5xl mx-auto p-8">
@@ -24,7 +63,7 @@ const ProfileView = () => {
                 <p className="text-lg text-muted-foreground">@username</p>
               </div>
 
-              <Button className="mb-4 bg-primary hover:bg-primary/90" size="lg">
+              <Button onClick={handleEdit} className="mb-4 bg-primary hover:bg-primary/90" size="lg">
                 <Icon name="Edit" size={20} className="mr-2" />
                 Редактировать
               </Button>
@@ -108,19 +147,19 @@ const ProfileView = () => {
                 Быстрые действия
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <Button variant="outline" className="h-auto py-4 flex-col gap-2">
+                <Button onClick={handlePrivacy} variant="outline" className="h-auto py-4 flex-col gap-2">
                   <Icon name="Shield" size={24} />
                   <span className="text-sm">Приватность</span>
                 </Button>
-                <Button variant="outline" className="h-auto py-4 flex-col gap-2">
+                <Button onClick={handleNotifications} variant="outline" className="h-auto py-4 flex-col gap-2">
                   <Icon name="Bell" size={24} />
                   <span className="text-sm">Уведомления</span>
                 </Button>
-                <Button variant="outline" className="h-auto py-4 flex-col gap-2">
+                <Button onClick={handleTheme} variant="outline" className="h-auto py-4 flex-col gap-2">
                   <Icon name="Palette" size={24} />
                   <span className="text-sm">Тема</span>
                 </Button>
-                <Button variant="outline" className="h-auto py-4 flex-col gap-2 text-destructive border-destructive/50">
+                <Button onClick={handleLogout} variant="outline" className="h-auto py-4 flex-col gap-2 text-destructive border-destructive/50">
                   <Icon name="LogOut" size={24} />
                   <span className="text-sm">Выход</span>
                 </Button>

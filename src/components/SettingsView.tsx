@@ -1,7 +1,45 @@
+import { useState } from "react";
 import Icon from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 const SettingsView = () => {
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [pushEnabled, setPushEnabled] = useState(true);
+  const [lastSeenPrivacy, setLastSeenPrivacy] = useState("Все");
+  const [readReceiptsPrivacy, setReadReceiptsPrivacy] = useState("Все");
+  const { toast } = useToast();
+
+  const handleToggleSound = () => {
+    setSoundEnabled(!soundEnabled);
+    toast({
+      title: "Зву сообщений",
+      description: `Зву ${!soundEnabled ? "включен" : "выключен"}`,
+    });
+  };
+
+  const handleTogglePush = () => {
+    setPushEnabled(!pushEnabled);
+    toast({
+      title: "Push-уведомления",
+      description: `Push-уведомления ${!pushEnabled ? "включены" : "выключены"}`,
+    });
+  };
+
+  const handleChangePassword = () => {
+    toast({
+      title: "Изменение пароля",
+      description: "Открыта форма смены пароля",
+    });
+  };
+
+  const handleLogout = () => {
+    toast({
+      title: "Выход",
+      description: "Вы вышли из аккаунта",
+      variant: "destructive",
+    });
+  };
   return (
     <div className="flex-1 p-8">
       <div className="max-w-2xl mx-auto space-y-6">
@@ -16,11 +54,15 @@ const SettingsView = () => {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm">Звук сообщений</span>
-                <Button variant="outline" size="sm">Включено</Button>
+                <Button onClick={handleToggleSound} variant="outline" size="sm">
+                  {soundEnabled ? "Включено" : "Выключено"}
+                </Button>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm">Push-уведомления</span>
-                <Button variant="outline" size="sm">Включено</Button>
+                <Button onClick={handleTogglePush} variant="outline" size="sm">
+                  {pushEnabled ? "Включено" : "Выключено"}
+                </Button>
               </div>
             </div>
           </div>
@@ -45,11 +87,11 @@ const SettingsView = () => {
           <div className="p-4 bg-card rounded-lg border border-border">
             <h3 className="font-semibold mb-2">Аккаунт</h3>
             <div className="space-y-3">
-              <Button variant="outline" className="w-full justify-start">
+              <Button onClick={handleChangePassword} variant="outline" className="w-full justify-start">
                 <Icon name="Key" size={18} className="mr-2" />
                 Изменить пароль
               </Button>
-              <Button variant="outline" className="w-full justify-start text-destructive">
+              <Button onClick={handleLogout} variant="outline" className="w-full justify-start text-destructive">
                 <Icon name="LogOut" size={18} className="mr-2" />
                 Выйти из аккаунта
               </Button>
